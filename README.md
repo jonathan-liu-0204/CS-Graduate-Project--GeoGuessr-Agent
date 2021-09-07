@@ -34,13 +34,13 @@
   - The Street View Static API lets you embed a static (non-interactive) Street View panorama or thumbnail into your web page, without the use of JavaScript. The viewport is defined with URL parameters sent through a standard HTTP request, and is returned as a static image.
 
 - URL Parameters
-  - example https://maps.googleapis.com/maps/api/streetview?parameters
-  - size of image size=400x400
-  - latitude and longitude location=40.457375,-80.009353
-  - field of view fov=50
-  - heading direcrtion heading=180
-  - elevation angle pitch=0
-  - api key key=YOUR-API-KEY
+  - example `https://maps.googleapis.com/maps/api/streetview?parameters`
+  - size of image `size=400x400`
+  - latitude and longitude`location=40.457375,-80.009353`
+  - field of view `fov=50`
+  - heading direcrtion `heading=180`
+  - elevation angle `pitch=0`
+  - api key `key=YOUR-API-KEY`
 
 ### Convert to Country
 
@@ -49,7 +49,7 @@
   - Returns the country name for the given latitude and longitude
 
 - URL Parameters
-  - example http://api.geonames.org/countryCodeJSON?lat=49.03&lng=10.2&username=demo
+  - example `http://api.geonames.org/countryCodeJSON?lat=49.03&lng=10.2&username=demo`
 
 ## Model Selection
 
