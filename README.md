@@ -22,17 +22,21 @@
 
 ## Data Preparation
 
+> 先使用 *Street View Image Metadata* 去偵測該位置是否合法(此部分無須消耗 API 使用量)，再利用 *Street View Static API* 去讀取照片，最終再利用 *GeoNames Website* 將其轉換成國家名稱。
+
 ### Google Street View API
 
 - API Introduction
   - [Street View Static API Overview](https://developers.google.com/maps/documentation/streetview/overview)
-  - *The Street View Static API lets you embed a static (non-interactive) Street View panorama or thumbnail into your web page, without the use of JavaScript. The viewport is defined with URL parameters sent through a standard HTTP request, and is returned as a static image.*
+    > *The Street View Static API lets you embed a static (non-interactive) Street View panorama or thumbnail into your web page, without the use of JavaScript. The viewport is defined with URL parameters sent through a standard HTTP request, and is returned as a static image.*
+  - [Street View Image Metadata](https://developers.google.com/maps/documentation/streetview/metadata)
+    > *The Street View Static API metadata requests provide data about Street View panoramas. Using the metadata, you can find out if a Street View image is available at a given location. Accessing this metadata allows you to customize error behavior in your application.*
 
 - URL Parameters
   - example `https://maps.googleapis.com/maps/api/streetview?parameters`
-  - size of image `size=400x400`
-  - latitude and longitude`location=40.457375,-80.009353`
-  - field of view `fov=50`
+  - size of image `size=600x400`
+  - latitude and longitude `location=40.457375,-80.009353`
+  - field of view `fov=90`
   - heading direcrtion `heading=180`
   - elevation angle `pitch=0`
   - api key `key=YOUR-API-KEY`
@@ -51,11 +55,3 @@
 ## Training Process
 
 ## Result
-
-
-
-
-
-
-
-
