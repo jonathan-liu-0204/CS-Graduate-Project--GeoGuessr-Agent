@@ -4,21 +4,25 @@ import json
 from PIL import Image
 from io import BytesIO
 
-size, fov, heading, pitch, key = "600x300", "90", "180", "0", "API-KEY" # 設定 Google Street View 當中的 URL 參數 (API KEY 需註冊)
+size, fov, heading, pitch = "600x300", "90", "0", "0" # 設定 Google Street View 當中的 URL 參數 (圖片呈現格式)
+
+imageKey, checkKey = "YOUR-API-KEY", "YOUR-API-KEY" # 將 Key 分兩支以確認 checkKey 不會消耗使用量
 
 username = "USER-NAME" # 設定"依經緯度傳換為國家"網站上的帳號名稱 (需註冊)
 
-imgCount = 1 # 設定需要找到多少張合法經緯度位置的圖片
+imgCount = 3 # 設定需要找到多少張合法經緯度位置的圖片
 
 currentCount = 0 # 目前已找到多少張圖片
 
 def downloadImg():
-    lat, lng = (random.random() * 90) - 90,  (random.random() * 180) - 180 # 隨機數產生經緯度
-    lat, lng = 46.414382, 10.013988 # 暫時以確定值代替以節省 API 用量
+    lat, lng = (random.random() * 180) - 90,  (random.random() * 360) - 180 # 隨機數產生經緯度
     location = str(lat) + ',' + str(lng)
-    viewUrl = "https://maps.googleapis.com/maps/api/streetview?size=" + size + "&location=" + location + "&fov=" + fov + "&heading="+ heading + "&pitch=" + pitch + "&key=" + key + "&return_error_code=true"
-    viewRresponse = requests.get(viewUrl)
-    if viewRresponse.status_code == 200: # 回傳值為200代表合法經緯度，若為404則為非法
+    checkUrl = "https://maps.googleapis.com/maps/api/streetview/metadata?location=" + location + "&key=" + checkKey
+    viewUrl = "https://maps.googleapis.com/maps/api/streetview?size=" + size + "&location=" + location + "&fov=" + fov + "&heading="+ heading + "&pitch=" + pitch + "&key=" + imageKey + "&return_error_code=true"
+    checkRresponse = requests.get(checkUrl)
+    checkDetail = json.loads(checkRresponse.text)
+    if checkDetail["status"] == "OK": # 回傳值為OK代表合法經緯度，若為REQUEST_DENIED or ZERO_RESULTS則為非法
+        viewRresponse = requests.get(viewUrl)
         img = Image.open(BytesIO(viewRresponse.content)) # 轉成 img 供以後做處理 (直接匯入 model 或先存在本機上)
         img.save("./images/" + str(currentCount) + ".jpg") # 以儲存在 images 資料夾做範例 (需新建一個 images/)
         countryUrl = "http://api.geonames.org/countryCodeJSON?lat=" + str(round(lat, 2)) + "&lng=" + str(round(lng, 2)) + "&username=" + username
