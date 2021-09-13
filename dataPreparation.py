@@ -1,6 +1,5 @@
-import random
-import requests
-import json
+import random, time, os
+import requests, json
 from PIL import Image
 from io import BytesIO
 
@@ -24,7 +23,7 @@ def downloadImg():
     if checkDetail["status"] == "OK": # 回傳值為OK代表合法經緯度，若為REQUEST_DENIED or ZERO_RESULTS則為非法
         viewRresponse = requests.get(viewUrl)
         img = Image.open(BytesIO(viewRresponse.content)) # 轉成 img 供以後做處理 (直接匯入 model 或先存在本機上)
-        img.save("./images/" + str(currentCount) + ".jpg") # 以儲存在 images 資料夾做範例 (需新建一個 images/)
+        img.save("./generated/images/image-" + str(currentCount) + ".jpg") # 以儲存在 images 資料夾做範例 (需新建一個 images/)
         countryUrl = "http://api.geonames.org/countryCodeJSON?lat=" + str(round(lat, 2)) + "&lng=" + str(round(lng, 2)) + "&username=" + username
         countryResponse = requests.get(countryUrl)
         countryDetail = json.loads(countryResponse.text) # 將回傳的 json 格式檔讀入
@@ -33,6 +32,14 @@ def downloadImg():
     return False
 
 if __name__ == '__main__':
+    if not os.path.exists('generated/'):
+        os.mkdir('generated/') # 產生 generated 及 images 資料夾
+        os.mkdir('generated/images/')
+
+    start = time.time()
     while True:
         if(downloadImg()): currentCount += 1 # 回傳為 True 代表找到圖片
         if(currentCount == imgCount): break # 若以找到圖片數已達到一開始所要求數量則停止
+    end = time.time()
+
+    print(f'Download {imgCount} image(s) in {round(end-start, 3)} sec(s)')
