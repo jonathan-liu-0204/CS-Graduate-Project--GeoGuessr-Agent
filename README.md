@@ -41,6 +41,21 @@
   - elevation angle `pitch=0`
   - api key `key=YOUR-API-KEY`
 
+- Google Street View Coverage
+  ![](https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Google_Street_View_coverage.svg/1920px-Google_Street_View_coverage.svg.png)
+
+  - Condition
+    - Mostly full coverage (dark blue)
+    - Partial converage (light blue)
+    - Country size and population 
+  - List of qualified countries
+    - Asia `Russia` `Japan` `South Korea` `Taiwan` `Singapore` `Malaysia` `Thailand` `Indonesia` `Philippines` `Israel` `Cambodia` `Sri Lanka` `Vietnam` `Mongolia` `Bhutan` `Bangladesh` `India` `Kyrgyzstan`
+    - Europe 
+    - North America  `USA` `Canada` `Mexico`
+    - South America `Brazil` `Argentina` `Chile` `Uruguay` `Peru` `Ecuador` `Colombia` `Bolivia`
+    - Africa `South Africa` `Botswana` `Kenya` `Ghana` `Senegal` `Nigeria` `Lesotho` `Eswatini`
+    - Oceania `Australia` `New Zealand`
+
 ### Convert to Country
 
 - API Introduction
