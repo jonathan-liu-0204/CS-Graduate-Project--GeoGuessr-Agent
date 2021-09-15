@@ -23,10 +23,12 @@ def downloadImg():
     if checkDetail["status"] == "OK": # 回傳值為OK代表合法經緯度，若為REQUEST_DENIED or ZERO_RESULTS則為非法
         viewRresponse = requests.get(viewUrl)
         img = Image.open(BytesIO(viewRresponse.content)) # 轉成 img 供以後做處理 (直接匯入 model 或先存在本機上)
-        img.save("./generated/images/image-" + str(currentCount) + ".jpg") # 以儲存在 images 資料夾做範例 (需新建一個 images/)
         countryUrl = "http://api.geonames.org/countryCodeJSON?lat=" + str(round(lat, 2)) + "&lng=" + str(round(lng, 2)) + "&username=" + username
         countryResponse = requests.get(countryUrl)
         countryDetail = json.loads(countryResponse.text) # 將回傳的 json 格式檔讀入
+        if not os.path.exists('generated/images/'+countryDetail["countryName"]+'/'): # 檢查資料夾是否存在
+            os.mkdir('generated/images/'+countryDetail["countryName"]+'/')
+        img.save("./generated/images/" + countryDetail["countryName"] + '/image-' + str(currentCount) + ".jpg") # 將圖片儲存在路徑 'generated/images/{country}/'
         print(f'Location: {tuple((lat, lng))}\tCountry: {countryDetail["countryName"]}') # 印出其經緯度及對應的國家名稱 (供未來作為 ground truth)
         return True
     return False
