@@ -8,6 +8,7 @@
     - [Google Street View API](#google-street-view-api)
     - [Convert to Country](#convert-to-country)
   - [Model Selection](#model-selection)
+    - [Number of Models](#number-of-models)
   - [Training Process](#training-process)
   - [Result](#result)
 
@@ -48,13 +49,13 @@
     - Mostly full coverage (dark blue)
     - Partial converage (light blue)
     - Country size and population 
-  - List of qualified countries
-    - Asia `Russia` `Japan` `South Korea` `Taiwan` `Singapore` `Malaysia` `Thailand` `Indonesia` `Philippines` `Israel` `Cambodia` `Sri Lanka` `Vietnam` `Mongolia` `Bhutan` `Bangladesh` `India` `Kyrgyzstan`
-    - Europe 
-    - North America  `USA` `Canada` `Mexico`
-    - South America `Brazil` `Argentina` `Chile` `Uruguay` `Peru` `Ecuador` `Colombia` `Bolivia`
-    - Africa `South Africa` `Botswana` `Kenya` `Ghana` `Senegal` `Nigeria` `Lesotho` `Eswatini`
-    - Oceania `Australia` `New Zealand`
+  - List of qualified countries (75)
+    - Asia (19) `Russia` `Japan` `South Korea` `Taiwan` `Singapore` `Malaysia` `Thailand` `Indonesia` `Philippines` `Israel` `Cambodia` `Sri Lanka` `Vietnam` `Mongolia` `Bhutan` `Bangladesh` `India` `Kyrgyzstan` `UAE`
+    - Europe (35) `UK` `Ireland` `Iceland` `Spain` `Portugal` `Germany` `France` `Netherlands` `Denmark` `Belgium` `Italy` `Switzerland` `Luxembourg` `Poland` `Czechia` `Estonia` `Latvia` `Lithuania` `Austria` `Hungary` `Slovakia` `Slovenia` `Norway` `Sweden` `Finland` `Serbia` `Romania` `Bulgaria` `Croatia` `Greece` `Turkey` `Ukraine` `Albania` `Montenegro` `North Macedonia`
+    - North America (3)  `USA` `Canada` `Mexico`
+    - South America (8) `Brazil` `Argentina` `Chile` `Uruguay` `Peru` `Ecuador` `Colombia` `Bolivia`
+    - Africa (8) `South Africa` `Botswana` `Kenya` `Ghana` `Senegal` `Nigeria` `Lesotho` `Eswatini`
+    - Oceania (2) `Australia` `New Zealand`
 
 ### Convert to Country
 
@@ -66,6 +67,13 @@
   - example `http://api.geonames.org/countryCodeJSON?lat=49.03&lng=10.2&username=demo`
 
 ## Model Selection
+
+### Number of Models
+
+- 橫向拓展
+  - 將一個地點用多張圖片代表而非一張，例如四個方位各取一張照片
+- 縱向拓展
+  - 將分類分層，例如先區分出七大洲再去尋找國家
 
 ## Training Process
 
