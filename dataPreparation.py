@@ -29,7 +29,7 @@ def downloadImg():
         if(countryDetail["countryName"] == targetCountry): # 若此合法經緯度位於我們設定的目標國家
             viewRresponse = requests.get(viewUrl)
             img = Image.open(BytesIO(viewRresponse.content)) # 轉成 img 供以後做處理
-            img.save("./generated/images/" + countryDetail["countryName"] + '/image-' + str(currentCount+54) + ".jpg") # 將圖片儲存在路徑 'generated/images/{country}/'
+            img.save("./generated/images/" + countryDetail["countryName"] + '/image-' + str(currentCount) + ".jpg") # 將圖片儲存在路徑 'generated/images/{country}/'
             print(f'Location: {tuple((lat, lng))}\tCountry: {countryDetail["countryName"]}') # 印出其經緯度及對應的國家名稱 (供未來作為 ground truth)
             writeDetails("Location: " + str(tuple((lat, lng))) + "\tCountry: " + targetCountry + '\n') # 將地理位置存入 .txt
             return True # 此部分情況是合法的經緯度且位於我們的目標國家
