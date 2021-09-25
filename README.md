@@ -73,6 +73,16 @@
 
 - Source Code
   - [Pytorch Tutorial](https://pytorch.org/tutorials/beginner/finetuning_torchvision_models_tutorial.html)
+  - Folder Structure
+    
+    ```
+      📦 project
+       ┣ 📂generated
+       ┃  ┣ 📂images
+       ┃  ┃  ┣ 📂train
+       ┃  ┃  ┗ 📂val
+       ┗  ┗ 📂details
+    ```
 
 ### Number of Models
 
