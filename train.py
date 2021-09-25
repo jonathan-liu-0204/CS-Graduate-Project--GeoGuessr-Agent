@@ -1,0 +1,168 @@
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.optim import lr_scheduler
+import numpy as np
+import torchvision
+from torchvision import datasets, models, transforms
+import matplotlib.pyplot as plt
+import time
+import os
+import copy
+
+data_dir = "generated/images"   # 設定圖片資料夾位置
+model_name = "resnet"           # 選擇 Models (非正式名稱)
+num_classes = 3                 # 設定共有多少類別 (手動)
+batch_size = 8                  # 取決於擁有多少記憶體
+num_epochs = 25                 # 設定訓練過程要多少 Epochs
+feature_extract = False         # 這裡固定為 False (表示去訓練整個 Model )
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs, is_inception):
+    since = time.time()
+    
+    val_acc_history = []
+    best_model_wts = copy.deepcopy(model.state_dict())
+    best_acc = 0.0
+
+    for epoch in range(num_epochs):
+        print(f'Epoch: {epoch+1}/{num_epochs}')
+        print('-' * 15)
+
+        for phase in ['train', 'val']:
+            if phase == 'train':
+                model.train()
+            else:
+                model.eval()
+            
+            running_loss = 0.0
+            running_corrects = 0
+
+            for inputs, labels in dataloaders[phase]:
+                inputs = inputs.to(device)
+                labels = labels.to(device)
+
+                optimizer.zero_grad()
+
+                with torch.set_grad_enabled(phase == 'train'):
+                    if is_inception and phase == 'train':
+                        outputs, aux_outputs = model(inputs)
+                        loss1 = criterion(outputs, labels)
+                        loss2 = criterion(aux_outputs, labels)
+                        loss = loss1 + 0.4 * loss2
+                    else:
+                        outputs = model(inputs)
+                        loss = criterion(outputs, labels)
+                    
+                    _, preds = torch.max(outputs, 1)
+
+                    if phase == 'train':
+                        loss.backward()
+                        optimizer.step()
+
+                running_loss += loss.item() * inputs.size(0)
+                running_corrects += torch.sum(preds == labels.data)
+
+            if phase == 'train':
+                scheduler.step()
+
+            epoch_loss = running_loss / len(dataloaders[phase].dataset)
+            epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
+
+            print('{}\tLoss: {:.4f}\tAcc: {:.4f}'.format(phase.upper(), epoch_loss, epoch_acc))
+
+            if phase == 'val' and epoch_acc > best_acc:
+                best_acc = epoch_acc
+                best_model_wts = copy.deepcopy(model.state_dict())
+            if phase == 'val':
+                val_acc_history.append(epoch_acc)
+        
+        print()
+    
+    time_elapsed = time.time() - since
+    print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+    print(f'Best Val Acc: {best_acc}')
+
+    model.load_state_dict(best_model_wts)
+    return model, val_acc_history
+
+# Notice that inception_v3 requires the input size to be (299,299), whereas all of the other models expect (224,224).
+def initialize_model(model_name, num_classes, feature_extract, use_pretrained=True):
+    model_ft, input_size = None, 0
+
+    if model_name == 'resnet': # Example: Resnet18
+        model_ft = models.resnet18(pretrained=use_pretrained)
+        num_ftrs = model_ft.fc.in_features
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
+        input_size = 224
+
+    elif model_name == 'alexnet':
+        model_ft = models.alexnet(pretrained=use_pretrained)
+        num_ftrs = model_ft.classifier[6].in_features
+        model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
+        input_size = 224
+
+    elif model_name == 'vgg': # Example: VGG-11
+        model_ft = models.vgg11_bn(pretrained=use_pretrained)
+        num_ftrs = model_ft.classifier[6].in_features
+        model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
+        input_size = 224
+
+    elif model_name == 'squeezenet': # Example: Version 1.0
+        model_ft = models.squeezenet1_0(pretrained=use_pretrained)
+        model_ft.classifier[1] = nn.Conv2d(512, num_classes, kernel_size=(1,1), stride=(1,1))
+        model_ft.num_classes = num_classes
+        input_size = 224
+
+    elif model_name == 'densenet': # Example: Densenet-121
+        model_ft = models.densenet121(pretrained=use_pretrained)
+        num_ftrs = model_ft.classifier.in_features
+        model_ft.classifier = nn.Linear(num_ftrs, num_classes)
+        input_size = 224
+
+    else:
+        print("Invalid Model Name......")
+        exit()
+
+    return model_ft, input_size
+
+##### Initialize and Reshape the Networks #####
+model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
+print(model_ft)
+
+########## Load Data From Directory ##########
+data_transforms = {
+    # Notice, the models were pretrained with the hard-coded normalization values
+    'train': transforms.Compose([
+        transforms.RandomResizedCrop(input_size),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+    'val': transforms.Compose([
+        transforms.Resize(input_size),
+        transforms.CenterCrop(input_size),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+}
+
+print("Initializing Datasets and Dataloaders...")
+
+image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'val']}
+dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size, shuffle=True, num_workers=0) for x in ['train', 'val']}
+class_names = image_datasets['train'].classes
+
+print(f'Class Names: {class_names} on Device: {device}')
+
+#### Create the Optimizer and Loss Function ####
+model_ft = model_ft.to(device)
+params_to_update = model_ft.parameters()
+
+optimizer_ft = optim.SGD(params_to_update, lr=0.001, momentum=0.9)
+criterion = nn.CrossEntropyLoss()
+
+###### Run Training and Validation Step ######
+step_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=10, gamma=0.1)
+model_ft, history = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, step_lr_scheduler, num_epochs=num_epochs, is_inception=False)
