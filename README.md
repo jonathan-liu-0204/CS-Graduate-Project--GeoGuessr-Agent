@@ -8,6 +8,7 @@
     - [Google Street View API](#google-street-view-api)
     - [Convert to Country](#convert-to-country)
   - [Model Selection](#model-selection)
+    - [Finetuning Torchvision Models](#finetuning-torchvision-models)
     - [Number of Models](#number-of-models)
   - [Training Process](#training-process)
   - [Result](#result)
@@ -67,6 +68,11 @@
   - example `http://api.geonames.org/countryCodeJSON?lat=49.03&lng=10.2&username=demo`
 
 ## Model Selection
+
+### Finetuning Torchvision Models
+
+- Source Code
+  - [Pytorch Tutorial](https://pytorch.org/tutorials/beginner/finetuning_torchvision_models_tutorial.html)
 
 ### Number of Models
 
