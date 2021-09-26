@@ -15,7 +15,7 @@ model_name = "resnet"           # 選擇 Models (非正式名稱)
 num_classes = 3                 # 設定共有多少類別 (手動)
 batch_size = 8                  # 取決於擁有多少記憶體
 num_epochs = 25                 # 設定訓練過程要多少 Epochs
-feature_extract = False         # 這裡固定為 False (表示去訓練整個 Model )
+feature_extract = False         # 這裡固定為 False (表示去訓練整個 Model)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -128,7 +128,7 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
     return model_ft, input_size
 
 ##### Initialize and Reshape the Networks #####
-model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
+model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=False)
 print(model_ft)
 
 ########## Load Data From Directory ##########
