@@ -84,6 +84,16 @@
        ┗  ┗ 📂details
     ```
 
+### Model Sample Code
+- Github: bentrevett/pytorch-image-classification
+- Link: https://github.com/bentrevett/pytorch-image-classification
+- Model Contained:
+  - Multilayer Perceptron
+  - LeNet
+  - AlexNet
+  - VGG
+  - ResNet
+
 ### Number of Models
 
 - 橫向拓展
