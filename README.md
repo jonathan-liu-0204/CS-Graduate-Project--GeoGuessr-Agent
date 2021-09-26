@@ -22,7 +22,7 @@
   | 1 Month          | 2 Months        | 1 Week       |
 - 彈性時間 (三週)
 
-## Data Preparation
+## Data Preparation 
 
 > 先使用 *Street View Image Metadata* 去偵測該位置是否合法(此部分無須消耗 API 使用量)，再利用 *Street View Static API* 去讀取照片，最終再利用 *GeoNames Website* 將其轉換成國家名稱。
 
