@@ -10,14 +10,20 @@ import time
 import os
 import copy
 
+############## TENSORBOARD ##############
+from torch.utils.tensorboard import SummaryWriter
+
+exp_name = "3/3"                # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
 data_dir = "generated/images"   # 設定圖片資料夾位置
-model_name = "resnet"           # 選擇 Models (非正式名稱)
-num_classes = 3                 # 設定共有多少類別 (手動)
+model_name = "vgg"              # 選擇 Models (非正式名稱)
+num_classes = 7                 # 設定共有多少類別 (手動)
 batch_size = 8                  # 取決於擁有多少記憶體
-num_epochs = 25                 # 設定訓練過程要多少 Epochs
+max_epochs = 50                 # 設定訓練過程最大 Epochs 上限
+target_acc = 0.7                # 設定目標正確率
 feature_extract = False         # 這裡固定為 False (表示去訓練整個 Model)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+writer = SummaryWriter('runs/' + exp_name)
 
 def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs, is_inception):
     since = time.time()
@@ -27,7 +33,7 @@ def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs,
     best_acc = 0.0
 
     for epoch in range(num_epochs):
-        print(f'Epoch: {epoch+1}/{num_epochs}')
+        print(f'Epoch: {epoch+1}')
         print('-' * 15)
 
         for phase in ['train', 'val']:
@@ -71,6 +77,13 @@ def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs,
             epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
 
             print('{}\tLoss: {:.4f}\tAcc: {:.4f}'.format(phase.upper(), epoch_loss, epoch_acc))
+            
+            if phase == 'train':
+                writer.add_scalar('Training Loss', epoch_loss, epoch)
+                writer.add_scalar('Training Acc', epoch_acc, epoch)
+            else:
+                writer.add_scalar('Validation Loss', epoch_loss, epoch)
+                writer.add_scalar('Validation Acc', epoch_acc, epoch)
 
             if phase == 'val' and epoch_acc > best_acc:
                 best_acc = epoch_acc
@@ -79,6 +92,8 @@ def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs,
                 val_acc_history.append(epoch_acc)
         
         print()
+        if(best_acc >= target_acc):
+            break
     
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
@@ -88,35 +103,40 @@ def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs,
     return model, val_acc_history
 
 # Notice that inception_v3 requires the input size to be (299,299), whereas all of the other models expect (224,224).
-def initialize_model(model_name, num_classes, feature_extract, use_pretrained=True):
+def initialize_model(model_name, num_classes, feature_extract, use_pretrained=False):
     model_ft, input_size = None, 0
 
     if model_name == 'resnet': # Example: Resnet18
         model_ft = models.resnet18(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.fc.in_features
         model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
     elif model_name == 'alexnet':
         model_ft = models.alexnet(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.classifier[6].in_features
         model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
         input_size = 224
 
     elif model_name == 'vgg': # Example: VGG-11
         model_ft = models.vgg11_bn(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.classifier[6].in_features
         model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
         input_size = 224
 
     elif model_name == 'squeezenet': # Example: Version 1.0
         model_ft = models.squeezenet1_0(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_extract)
         model_ft.classifier[1] = nn.Conv2d(512, num_classes, kernel_size=(1,1), stride=(1,1))
         model_ft.num_classes = num_classes
         input_size = 224
 
     elif model_name == 'densenet': # Example: Densenet-121
         model_ft = models.densenet121(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.classifier.in_features
         model_ft.classifier = nn.Linear(num_ftrs, num_classes)
         input_size = 224
@@ -127,8 +147,14 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
 
     return model_ft, input_size
 
+# If transfer learning...
+def set_parameter_requires_grad(model, feature_extracting):
+    if feature_extracting:
+        for param in model.parameters():
+            param.requires_grad = False
+
 ##### Initialize and Reshape the Networks #####
-model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=False)
+model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
 print(model_ft)
 
 ########## Load Data From Directory ##########
@@ -164,5 +190,5 @@ optimizer_ft = optim.SGD(params_to_update, lr=0.001, momentum=0.9)
 criterion = nn.CrossEntropyLoss()
 
 ###### Run Training and Validation Step ######
-step_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=10, gamma=0.1)
-model_ft, history = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, step_lr_scheduler, num_epochs=num_epochs, is_inception=False)
+step_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=12, gamma=1)
+model_ft, history = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, step_lr_scheduler, num_epochs=max_epochs, is_inception=False)
