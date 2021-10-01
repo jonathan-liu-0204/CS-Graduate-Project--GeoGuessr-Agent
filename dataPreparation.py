@@ -9,16 +9,16 @@ imageKey, checkKey = "YOUR-API-KEY", "YOUR-API-KEY" # 將 Key 分兩支以確認
 
 username = "USER-NAME" # 設定"依經緯度傳換為國家"網站上的帳號名稱 (需註冊)
 
-imgCount = 20 # 設定需要找到多少張合法經緯度位置的圖片 (一次到位，關係到檔案名稱)
+imgCount = 200 # 設定需要找到多少張合法經緯度位置的圖片 (一次到位，關係到檔案名稱)
 
 currentCount = 0 # 目前已找到多少張圖片
 
-targetCountry = "CURRENT-TARGET-COUNTRY" # 設定要尋找的目標國家
+targetCountry = "TARGET-COUNTRY" # 設定要尋找的目標國家
 
 usage = 'train' # 可選擇 train 或是 val 代表目前圖片存於哪個資料夾中
 
 def downloadImg(usage='train'):
-    lat, lng = (random.random() * 24) - 42,  (random.random() * 6) - 74 # 隨機數產生經緯度(在目標國家範圍下)
+    lat, lng = (random.random() * 29) - 51,  (random.random() * 14) - 71 # 隨機數產生經緯度(在目標國家範圍下)
     location = str(lat) + ',' + str(lng)
     checkUrl = "https://maps.googleapis.com/maps/api/streetview/metadata?location=" + location + "&key=" + checkKey
     viewUrl = "https://maps.googleapis.com/maps/api/streetview?size=" + size + "&location=" + location + "&fov=" + fov + "&heading="+ heading + "&pitch=" + pitch + "&key=" + imageKey + "&return_error_code=true"
@@ -32,7 +32,7 @@ def downloadImg(usage='train'):
             viewRresponse = requests.get(viewUrl)
             img = Image.open(BytesIO(viewRresponse.content)) # 轉成 img 供以後做處理
             img.save("./generated/images/" + usage + "/" + countryDetail["countryName"] + '/image-' + str(currentCount) + ".jpg") # 將圖片儲存在路徑 'generated/images/{country}/'
-            print(f'Location: {tuple((lat, lng))}\tCountry: {countryDetail["countryName"]}') # 印出其經緯度及對應的國家名稱 (供未來作為 ground truth)
+            print(f'Number: {currentCount+1}/{imgCount}\tLocation: {tuple((lat, lng))}\tCountry: {countryDetail["countryName"]}') # 印出其經緯度及對應的國家名稱 (供未來作為 ground truth)
             writeDetails("Location: " + str(tuple((lat, lng))) + "\tCountry: " + targetCountry + "\tUsage: " + usage + '\n') # 將地理位置存入 .txt
             return True # 此部分情況是合法的經緯度且位於我們的目標國家
         return False # 此部分情況是合法的經緯度但並非我們的目標國家
