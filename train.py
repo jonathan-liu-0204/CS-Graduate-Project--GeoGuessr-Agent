@@ -13,7 +13,7 @@ import copy
 ############## TENSORBOARD ##############
 from torch.utils.tensorboard import SummaryWriter
 
-exp_name = "3/3"                # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
+exp_name = "4/2"                # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
 data_dir = "generated/images"   # 設定圖片資料夾位置
 model_name = "vgg"              # 選擇 Models (非正式名稱)
 num_classes = 7                 # 設定共有多少類別 (手動)
@@ -44,6 +44,7 @@ def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs,
             
             running_loss = 0.0
             running_corrects = 0
+            top3_running_corrects = 0                                                           ## add: top 3 accuracy
 
             for inputs, labels in dataloaders[phase]:
                 inputs = inputs.to(device)
@@ -62,6 +63,7 @@ def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs,
                         loss = criterion(outputs, labels)
                     
                     _, preds = torch.max(outputs, 1)
+                    _, top3_preds = torch.topk(outputs, 3, 1)                                   ## add: top 3 accuracy
 
                     if phase == 'train':
                         loss.backward()
@@ -69,21 +71,26 @@ def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs,
 
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
+                top3_labels = labels.data.reshape(labels.data.shape[0], 1)                      ## add: top 3 accuracy
+                top3_running_corrects += torch.sum(top3_labels == top3_preds)                   ## add: top 3 accuracy
 
             if phase == 'train':
                 scheduler.step()
 
             epoch_loss = running_loss / len(dataloaders[phase].dataset)
             epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
+            top3_epoch_acc = top3_running_corrects.double() / len(dataloaders[phase].dataset)   ## add: top 3 accuracy
 
-            print('{}\tLoss: {:.4f}\tAcc: {:.4f}'.format(phase.upper(), epoch_loss, epoch_acc))
+            print('{}\tLoss: {:.4f}\tAcc: {:.4f}\tTop 3 Acc: {:.4f}'.format(phase.upper(), epoch_loss, epoch_acc, top3_epoch_acc))
             
             if phase == 'train':
                 writer.add_scalar('Training Loss', epoch_loss, epoch)
                 writer.add_scalar('Training Acc', epoch_acc, epoch)
+                writer.add_scalar('Top 3 Training Acc', top3_epoch_acc, epoch)                  ## add: top 3 accuracy
             else:
                 writer.add_scalar('Validation Loss', epoch_loss, epoch)
                 writer.add_scalar('Validation Acc', epoch_acc, epoch)
+                writer.add_scalar('Top 3 Validation Acc', top3_epoch_acc, epoch)                ## add: top 3 accuracy
 
             if phase == 'val' and epoch_acc > best_acc:
                 best_acc = epoch_acc
@@ -186,9 +193,13 @@ print(f'Class Names: {class_names} on Device: {device}')
 model_ft = model_ft.to(device)
 params_to_update = model_ft.parameters()
 
-optimizer_ft = optim.SGD(params_to_update, lr=0.001, momentum=0.9)
+optimizer_ft = optim.SGD(params_to_update, lr=0.005, momentum=0.9)
 criterion = nn.CrossEntropyLoss()
 
 ###### Run Training and Validation Step ######
-step_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=12, gamma=1)
+step_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=5, gamma=0.5)
 model_ft, history = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, step_lr_scheduler, num_epochs=max_epochs, is_inception=False)
+
+########### Saving The Model ###########
+save_path = 'models/' + '1-1.pth'
+torch.save(model_ft, save_path)
