@@ -67,6 +67,8 @@
 - URL Parameters
   - example `http://api.geonames.org/countryCodeJSON?lat=49.03&lng=10.2&username=demo`
 
+### Little Widget
+- [Latitude and Longitude Finder](https://www.latlong.net/)
 ## Model Selection
 
 ### Finetuning Torchvision Models
