@@ -6,9 +6,9 @@ import csv
 
 size, fov, heading, pitch = "600x300", "90", "0", "0" # 設定 Google Street View 當中的 URL 參數 (圖片呈現格式)
 
-imageKey, checkKey = "AIzaSyCx7BBGzPe1FKawigAXw3qRLspKQkZvCmM", "AIzaSyCr-1jgNuxFhTsLgo9G3GIp3PY1EQS6NDk" # 將 Key 分兩支以確認 checkKey 不會消耗使用量
+imageKey, checkKey = "YOUR-API-KEY", "YOUR-API-KEY" # 將 Key 分兩支以確認 checkKey 不會消耗使用量
 
-username = "lawrence0215" # 設定"依經緯度傳換為國家"網站上的帳號名稱 (需註冊)
+username = "USER-NAME" # 設定"依經緯度傳換為國家"網站上的帳號名稱 (需註冊)
 
 currentCount = 0 # 目前已找到多少張圖片
 
