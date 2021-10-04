@@ -6,3 +6,6 @@ runs/
 
 # 忽略訓練過後的模型儲存
 models/
+
+# 忽略 dataPreparation.csv
+dataPreparation.csv
