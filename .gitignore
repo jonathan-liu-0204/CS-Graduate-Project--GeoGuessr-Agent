@@ -9,3 +9,6 @@ models/
 
 # 忽略 dataPreparation.csv
 dataPreparation.csv
+
+# 忽略 confusion matrix 表格
+figures/
