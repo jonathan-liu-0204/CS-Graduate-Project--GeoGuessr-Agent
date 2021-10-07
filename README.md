@@ -103,9 +103,12 @@
   - Tuned Parameters: `Models`, `Data Augmentation`, `Pre-Train`, `Batch Size`, `Learning Rate`, `Decay`...
   - Multiple Models: Continent --> Country
   - Because there are three chances in GeoGuessr Battle Royale, so we decide to also focus on top-3 accuracy (code lines with `## add: top 3 accuracy`)
+- Confusion Matrix
+  - xaxis: ground truth
+  - yaxis: prediction
 - Progress
   - South America(7)
-    - VGG: 64% Validation Accuracy, 90% Top-3 Validation Accuracy
+    - VGG: 67% Validation Accuracy, 90% Top-3 Validation Accuracy
 
 ### Model Sample Code
 - Github: bentrevett/pytorch-image-classification
