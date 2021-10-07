@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim import lr_scheduler
 import numpy as np
+import pandas as pd
+import seaborn as sns
 import torchvision
 from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
@@ -13,11 +15,11 @@ import copy
 ############## TENSORBOARD ##############
 from torch.utils.tensorboard import SummaryWriter
 
-exp_name = "europe/3/4"         # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
+exp_name = "europe/4/1"         # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
 data_dir = "generated/images"   # 設定圖片資料夾位置
 model_name = "vgg"              # 選擇 Models (非正式名稱)
 num_classes = 33                # 設定共有多少類別 (手動)
-batch_size = 16                 # 取決於擁有多少記憶體
+batch_size = 8                  # 取決於擁有多少記憶體
 max_epochs = 40                 # 設定訓練過程最大 Epochs 上限
 target_acc = 0.7                # 設定目標正確率
 feature_extract = False         # 這裡固定為 False (表示去訓練整個 Model)
@@ -207,10 +209,11 @@ step_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=5, gamma=0.5)
 model_ft, history = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, step_lr_scheduler, num_epochs=max_epochs, is_inception=False)
 
 ######### Show Confusion Matrix #########
-fig, ax = plt.subplots()
-ax.matshow(confusion_matrix, cmap='seismic')
-for (i, j), z in np.ndenumerate(confusion_matrix):
-    ax.text(j, i, '{:d}'.format(z), ha='center', va='center')
+df_cm = pd.DataFrame(confusion_matrix, class_names, class_names)
+plt.figure(figsize=(12,12))
+sns.heatmap(df_cm, annot=True, fmt="d", cmap='BuGn')
+plt.xlabel("Ground Truth")
+plt.ylabel("Prediction")
 fig_name = exp_name.replace('/', '-')
 plt.savefig('figures/' + fig_name + '.png')
 plt.show()
