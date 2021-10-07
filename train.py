@@ -15,7 +15,7 @@ import copy
 ############## TENSORBOARD ##############
 from torch.utils.tensorboard import SummaryWriter
 
-exp_name = "europe/4/1"         # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
+exp_name = "europe/3/5"         # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
 data_dir = "generated/images"   # 設定圖片資料夾位置
 model_name = "vgg"              # 選擇 Models (非正式名稱)
 num_classes = 33                # 設定共有多少類別 (手動)
@@ -80,7 +80,7 @@ def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs,
                 
                 if (epoch == num_epochs-1 and phase == 'val'):                                  ## add: confustion matrix
                     for batch_index in range(labels.data.shape[0]):
-                        confusion_matrix[preds[batch_index].item()][labels.data[batch_index].item()] += 1
+                        confusion_matrix[labels.data[batch_index].item()][preds[batch_index].item()] += 1
 
             if phase == 'train':
                 scheduler.step()
@@ -205,15 +205,19 @@ optimizer_ft = optim.SGD(params_to_update, lr=0.001, momentum=0.9)
 criterion = nn.CrossEntropyLoss()
 
 ###### Run Training and Validation Step ######
-step_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=5, gamma=0.5)
+step_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=8, gamma=0.5)
 model_ft, history = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, step_lr_scheduler, num_epochs=max_epochs, is_inception=False)
 
 ######### Show Confusion Matrix #########
+for i in range(len(class_names)):
+    total_val_amount = np.sum(confusion_matrix[i])
+    for j in range(len(class_names)):
+        confusion_matrix[i][j] = confusion_matrix[i][j] / total_val_amount
 df_cm = pd.DataFrame(confusion_matrix, class_names, class_names)
-plt.figure(figsize=(12,12))
-sns.heatmap(df_cm, annot=True, fmt="d", cmap='BuGn')
-plt.xlabel("Ground Truth")
-plt.ylabel("Prediction")
+plt.figure(figsize=(15,15))
+sns.heatmap(df_cm, annot=True, fmt=".2f", cmap='BuGn')
+plt.xlabel("Prediction")
+plt.ylabel("Ground Truth")
 fig_name = exp_name.replace('/', '-')
 plt.savefig('figures/' + fig_name + '.png')
 plt.show()
