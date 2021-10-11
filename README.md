@@ -7,6 +7,8 @@
   - [Data Preparation](#data-preparation)
     - [Google Street View API](#google-street-view-api)
     - [Convert to Country](#convert-to-country)
+    - [Little Widget](#little-widget)
+    - [Code Explanation](#code-explanation)
   - [Model Selection](#model-selection)
     - [Finetuning Torchvision Models](#finetuning-torchvision-models)
     - [Model Sample Code](#model-sample-code)
@@ -50,13 +52,14 @@
     - Mostly full coverage (dark blue)
     - Partial converage (light blue)
     - Country size and population 
-  - List of qualified countries (75)
+  - List of qualified countries (72)
     - Asia (19) `Russia` `Japan` `South Korea` `Taiwan` `Singapore` `Malaysia` `Thailand` `Indonesia` `Philippines` `Israel` `Cambodia` `Sri Lanka` `Vietnam` `Mongolia` `Bhutan` `Bangladesh` `India` `Kyrgyzstan` `UAE`
-    - Europe (35) `UK` `Ireland` `Iceland` `Spain` `Portugal` `Germany` `France` `Netherlands` `Denmark` `Belgium` `Italy` `Switzerland` `Luxembourg` `Poland` `Czechia` `Estonia` `Latvia` `Lithuania` `Austria` `Hungary` `Slovakia` `Slovenia` `Norway` `Sweden` `Finland` `Serbia` `Romania` `Bulgaria` `Croatia` `Greece` `Turkey` `Ukraine` `Albania` `Montenegro` `North Macedonia`
+    - Europe (33) `UK` `Ireland` `Spain` `Portugal` `Germany` `France` `Netherlands` `Denmark` `Belgium` `Italy` `Switzerland` `Luxembourg` `Poland` `Czechia` `Estonia` `Latvia` `Lithuania` `Austria` `Hungary` `Slovakia` `Slovenia` `Norway` `Sweden` `Finland` `Serbia` `Romania` `Bulgaria` `Croatia` `Greece` `Turkey` `Ukraine` `Albania` `Montenegro`
     - North America (3)  `USA` `Canada` `Mexico`
     - South America (7) `Brazil` `Argentina` `Chile` `Uruguay` `Peru` `Ecuador` `Colombia`
     - Africa (8) `South Africa` `Botswana` `Kenya` `Ghana` `Senegal` `Nigeria` `Lesotho` `Eswatini`
     - Oceania (2) `Australia` `New Zealand`
+    - TBD (3) `Bolivia` `Iceland` `North Macedonia`
 
 ### Convert to Country
 
@@ -69,6 +72,11 @@
 
 ### Little Widget
 - [Latitude and Longitude Finder](https://www.latlong.net/)
+
+### Code Explanation
+- `dataPreparation.py` 直接在檔案中設定相關資料要求
+- `dataPreparationByCsv.py` 將相關要求放置在 `dataPreparation.csv` 並執行連續蒐集
+
 ## Model Selection
 
 ### Finetuning Torchvision Models
@@ -95,9 +103,12 @@
   - Tuned Parameters: `Models`, `Data Augmentation`, `Pre-Train`, `Batch Size`, `Learning Rate`, `Decay`...
   - Multiple Models: Continent --> Country
   - Because there are three chances in GeoGuessr Battle Royale, so we decide to also focus on top-3 accuracy (code lines with `## add: top 3 accuracy`)
+- Confusion Matrix
+  - x-axis: Prediction
+  - y-axis: Ground Truth
 - Progress
   - South America(7)
-    - VGG: 64% Validation Accuracy, 90% Top-3 Validation Accuracy
+    - VGG: 67% Validation Accuracy, 90% Top-3 Validation Accuracy
 
 ### Model Sample Code
 - Github: bentrevett/pytorch-image-classification
