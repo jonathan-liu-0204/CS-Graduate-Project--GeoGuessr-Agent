@@ -8,6 +8,7 @@ import seaborn as sns
 import torchvision
 from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
+from PIL import Image
 import time
 import os
 import copy
@@ -15,13 +16,13 @@ import copy
 ############## TENSORBOARD ##############
 from torch.utils.tensorboard import SummaryWriter
 
-exp_name = "europe/3/5"         # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
+exp_name = "new-europe/europe/1"# 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
 data_dir = "generated/images"   # 設定圖片資料夾位置
 model_name = "vgg"              # 選擇 Models (非正式名稱)
-num_classes = 33                # 設定共有多少類別 (手動)
+num_classes = 6                 # 設定共有多少類別 (手動)
 batch_size = 8                  # 取決於擁有多少記憶體
-max_epochs = 40                 # 設定訓練過程最大 Epochs 上限
-target_acc = 0.7                # 設定目標正確率
+max_epochs = 50                 # 設定訓練過程最大 Epochs 上限
+target_acc = 0.8                # 設定目標正確率
 feature_extract = False         # 這裡固定為 False (表示去訓練整個 Model)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -205,7 +206,7 @@ optimizer_ft = optim.SGD(params_to_update, lr=0.001, momentum=0.9)
 criterion = nn.CrossEntropyLoss()
 
 ###### Run Training and Validation Step ######
-step_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=8, gamma=0.5)
+step_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=5, gamma=0.5)
 model_ft, history = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, step_lr_scheduler, num_epochs=max_epochs, is_inception=False)
 
 ######### Show Confusion Matrix #########
@@ -214,14 +215,15 @@ for i in range(len(class_names)):
     for j in range(len(class_names)):
         confusion_matrix[i][j] = confusion_matrix[i][j] / total_val_amount
 df_cm = pd.DataFrame(confusion_matrix, class_names, class_names)
-plt.figure(figsize=(15,15))
+plt.figure(figsize=(21,14))
 sns.heatmap(df_cm, annot=True, fmt=".2f", cmap='BuGn')
-plt.xlabel("Prediction")
-plt.ylabel("Ground Truth")
+plt.xlabel("Prediction", fontsize=18)
+plt.ylabel("Ground Truth", fontsize=18)
 fig_name = exp_name.replace('/', '-')
 plt.savefig('figures/' + fig_name + '.png')
-plt.show()
+img = Image.open('figures/' + fig_name + '.png')
+img.show()
 
 ########### Saving The Model ###########
-save_path = 'models/europe/3.pth'
+save_path = 'models/europe/europe-1.pth'
 torch.save(model_ft, save_path)
