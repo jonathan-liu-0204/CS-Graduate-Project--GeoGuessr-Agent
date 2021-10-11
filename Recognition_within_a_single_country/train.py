@@ -13,13 +13,13 @@ import copy
 ############## TENSORBOARD ##############
 from torch.utils.tensorboard import SummaryWriter
 
-exp_name = "4/2"                # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
+exp_name = "1003 LA Kansas DC"                # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
 data_dir = "generated/images"   # 設定圖片資料夾位置
-model_name = "vgg"              # 選擇 Models (非正式名稱)
+model_name = "densenet"              # 選擇 Models (非正式名稱)
 num_classes = 7                 # 設定共有多少類別 (手動)
 batch_size = 8                  # 取決於擁有多少記憶體
-max_epochs = 50                 # 設定訓練過程最大 Epochs 上限
-target_acc = 0.7                # 設定目標正確率
+max_epochs = 100                 # 設定訓練過程最大 Epochs 上限
+target_acc = 0.9                # 設定目標正確率
 feature_extract = False         # 這裡固定為 False (表示去訓練整個 Model)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -200,6 +200,6 @@ criterion = nn.CrossEntropyLoss()
 step_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=5, gamma=0.5)
 model_ft, history = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, step_lr_scheduler, num_epochs=max_epochs, is_inception=False)
 
-########### Saving The Model ###########
-save_path = 'models/' + '1-1.pth'
-torch.save(model_ft, save_path)
+# ########### Saving The Model ###########
+# save_path = 'models/' + '1-1.pth'
+# torch.save(model_ft, save_path)

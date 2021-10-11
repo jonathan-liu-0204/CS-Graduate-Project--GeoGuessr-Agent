@@ -5,37 +5,42 @@ from io import BytesIO
 
 size, fov, heading, pitch = "600x300", "90", "0", "0" # 設定 Google Street View 當中的 URL 參數 (圖片呈現格式)
 
-imageKey, checkKey = "YOUR-API-KEY", "YOUR-API-KEY" # 將 Key 分兩支以確認 checkKey 不會消耗使用量
+imageKey, checkKey = "", "" # 將 Key 分兩支以確認 checkKey 不會消耗使用量
 
-username = "USER-NAME" # 設定"依經緯度傳換為國家"網站上的帳號名稱 (需註冊)
+username = "" # 設定"依經緯度傳換為國家"網站上的帳號名稱 (需註冊)
 
-imgCount = 200 # 設定需要找到多少張合法經緯度位置的圖片 (一次到位，關係到檔案名稱)
+imgCount = 30 # 設定需要找到多少張合法經緯度位置的圖片 (一次到位，關係到檔案名稱)
 
 currentCount = 0 # 目前已找到多少張圖片
 
-targetCountry = "TARGET-COUNTRY" # 設定要尋找的目標國家
+targetCountry = "USWasDC" # 設定要尋找的目標國家
 
-usage = 'train' # 可選擇 train 或是 val 代表目前圖片存於哪個資料夾中
+usage = 'val' # 可選擇 train 或是 val 代表目前圖片存於哪個資料夾中
 
 def downloadImg(usage='train'):
-    lat, lng = (random.random() * 29) - 51,  (random.random() * 14) - 71 # 隨機數產生經緯度(在目標國家範圍下)
+    #USLosAngelas lat, lng = (random.random() * 0.34) + 33.82,  (random.random() * 0.64) - 118.44 # 隨機數產生經緯度(在目標國家範圍下)
+    #USKansas lat, lng = (random.random() * 0.34) + 38.91,  (random.random() * 0.45) - 94.79 # 隨機數產生經緯度(在目標國家範圍下)
+    lat, lng = (random.random() * 0.32) + 38.85,  (random.random() * 0.4) - 77.22 # 隨機數產生經緯度(在目標國家範圍下)
+
     location = str(lat) + ',' + str(lng)
     checkUrl = "https://maps.googleapis.com/maps/api/streetview/metadata?location=" + location + "&key=" + checkKey
     viewUrl = "https://maps.googleapis.com/maps/api/streetview?size=" + size + "&location=" + location + "&fov=" + fov + "&heading="+ heading + "&pitch=" + pitch + "&key=" + imageKey + "&return_error_code=true"
     checkRresponse = requests.get(checkUrl)
     checkDetail = json.loads(checkRresponse.text)
+    print(checkDetail)
+
     if checkDetail["status"] == "OK": # 回傳值為OK代表合法經緯度，若為REQUEST_DENIED or ZERO_RESULTS則為非法
         countryUrl = "http://api.geonames.org/countryCodeJSON?lat=" + str(round(lat, 2)) + "&lng=" + str(round(lng, 2)) + "&username=" + username
         countryResponse = requests.get(countryUrl)
         countryDetail = json.loads(countryResponse.text) # 將回傳的 json 格式檔讀入
-        if(countryDetail["countryName"] == targetCountry): # 若此合法經緯度位於我們設定的目標國家
-            viewRresponse = requests.get(viewUrl)
-            img = Image.open(BytesIO(viewRresponse.content)) # 轉成 img 供以後做處理
-            img.save("./generated/images/" + usage + "/" + countryDetail["countryName"] + '/image-' + str(currentCount) + ".jpg") # 將圖片儲存在路徑 'generated/images/{country}/'
-            print(f'Number: {currentCount+1}/{imgCount}\tLocation: {tuple((lat, lng))}\tCountry: {countryDetail["countryName"]}') # 印出其經緯度及對應的國家名稱 (供未來作為 ground truth)
-            writeDetails("Location: " + str(tuple((lat, lng))) + "\tCountry: " + targetCountry + "\tUsage: " + usage + '\n') # 將地理位置存入 .txt
-            return True # 此部分情況是合法的經緯度且位於我們的目標國家
-        return False # 此部分情況是合法的經緯度但並非我們的目標國家
+        #if(countryDetail["countryName"] == targetCountry): # 若此合法經緯度位於我們設定的目標國家
+        viewRresponse = requests.get(viewUrl)
+        img = Image.open(BytesIO(viewRresponse.content)) # 轉成 img 供以後做處理
+        img.save("./generated/images/" + usage + "/" + targetCountry + '/image-' + str(currentCount) + ".jpg") # 將圖片儲存在路徑 'generated/images/{country}/'
+        print(f'Number: {currentCount+1}/{imgCount}\tLocation: {tuple((lat, lng))}\t') # 印出其經緯度及對應的國家名稱 (供未來作為 ground truth)
+        writeDetails("Location: " + str(tuple((lat, lng))) + "\tCountry: " + targetCountry + "\tUsage: " + usage + '\n') # 將地理位置存入 .txt
+        return True # 此部分情況是合法的經緯度且位於我們的目標國家
+        #return False # 此部分情況是合法的經緯度但並非我們的目標國家
     return False # 此部分情況是非法的經緯度
 
 def writeDetails(string):
