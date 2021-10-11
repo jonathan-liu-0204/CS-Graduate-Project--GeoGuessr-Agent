@@ -53,13 +53,15 @@
     - Partial converage (light blue)
     - Country size and population 
   - List of qualified countries (72)
-    - Asia (19) `Russia` `Japan` `South Korea` `Taiwan` `Singapore` `Malaysia` `Thailand` `Indonesia` `Philippines` `Israel` `Cambodia` `Sri Lanka` `Vietnam` `Mongolia` `Bhutan` `Bangladesh` `India` `Kyrgyzstan` `UAE`
-    - Europe (33) `UK` `Ireland` `Spain` `Portugal` `Germany` `France` `Netherlands` `Denmark` `Belgium` `Italy` `Switzerland` `Luxembourg` `Poland` `Czechia` `Estonia` `Latvia` `Lithuania` `Austria` `Hungary` `Slovakia` `Slovenia` `Norway` `Sweden` `Finland` `Serbia` `Romania` `Bulgaria` `Croatia` `Greece` `Turkey` `Ukraine` `Albania` `Montenegro`
+    - Asia (18) `Japan` `South Korea` `Taiwan` `Singapore` `Malaysia` `Thailand` `Indonesia` `Philippines` `Israel` `Cambodia` `Sri Lanka` `Vietnam` `Mongolia` `Bhutan` `Bangladesh` `India` `Kyrgyzstan` `UAE`
+    - Europe (34) `UK` `Ireland` `Spain` `Portugal` `Germany` `France` `Netherlands` `Denmark` `Belgium` `Italy` `Switzerland` `Luxembourg` `Poland` `Czechia` `Estonia` `Latvia` `Lithuania` `Austria` `Hungary` `Slovakia` `Slovenia` `Norway` `Sweden` `Finland` `Serbia` `Romania` `Bulgaria` `Croatia` `Greece` `Turkey` `Ukraine` `Albania` `Montenegro` `Russia`
     - North America (3)  `USA` `Canada` `Mexico`
     - South America (7) `Brazil` `Argentina` `Chile` `Uruguay` `Peru` `Ecuador` `Colombia`
     - Africa (8) `South Africa` `Botswana` `Kenya` `Ghana` `Senegal` `Nigeria` `Lesotho` `Eswatini`
     - Oceania (2) `Australia` `New Zealand`
     - TBD (3) `Bolivia` `Iceland` `North Macedonia`
+  - Sub-Classifier in Europe
+  ![](https://i.ibb.co/vv4zJRH/Europe-Map.png)
 
 ### Convert to Country
 
