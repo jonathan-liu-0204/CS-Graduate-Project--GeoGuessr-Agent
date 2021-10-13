@@ -108,9 +108,6 @@
 - Confusion Matrix
   - x-axis: Prediction
   - y-axis: Ground Truth
-- Progress
-  - South America(7)
-    - VGG: 67% Validation Accuracy, 90% Top-3 Validation Accuracy
 
 ### Model Sample Code
 - Github: bentrevett/pytorch-image-classification
@@ -123,5 +120,11 @@
   - ResNet
 
 ## Training Process
+
+- South America (7)
+  - VGG: 67% Validation Accuracy, 90% Top-3 Validation Accuracy
+  - Confusion Matrix
+  ![](https://i.ibb.co/9qJJ5t3/south-america-final-6.png)
+  - See More Training Details on [Google Sheet](https://docs.google.com/spreadsheets/d/1xkLweQziOTVoZh3IRLCucdoJTCRWPkm7/edit?usp=sharing&ouid=118085605286254605923&rtpof=true&sd=true)
 
 ## Result
