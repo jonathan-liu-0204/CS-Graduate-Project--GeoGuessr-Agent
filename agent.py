@@ -1,22 +1,22 @@
 from PIL import ImageGrab
 import numpy as np
-
+import colorama
 from torchvision import transforms
 import torch
-import torch.nn as nn
 import time
 
 SCREEN = (500, 325, 1500, 775)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+colorama.init()
 
-model_path, label_path = 'models/south-america/Final.pth', 'lables/south-america.txt'
+model_path, label_path = 'models/europe/5.pth', 'lables/europe.txt'
 
 class bcolors:
     PERFECT = '\033[42m'
     GREAT = '\033[96m'
     GOOD = '\033[93m'
     BAD = '\033[90m'
-    ENDC = '\033[0m'
+    ENDC = '\033[0m'    
 
 def model_loading(num_classes, model_path):
     # model = models.vgg11_bn(pretrained=False)
