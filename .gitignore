@@ -7,8 +7,11 @@ runs/
 # 忽略訓練過後的模型儲存
 models/
 
-# 忽略 dataPreparation.csv
-dataPreparation.csv
-
 # 忽略 confusion matrix 表格
 figures/
+
+# 忽略 labels 名稱
+lables/
+
+# 忽略 dataPreparation.csv
+dataPreparation.csv
