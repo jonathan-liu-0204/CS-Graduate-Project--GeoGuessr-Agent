@@ -128,3 +128,7 @@
   - See More Training Details on [Google Sheet](https://docs.google.com/spreadsheets/d/1xkLweQziOTVoZh3IRLCucdoJTCRWPkm7/edit?usp=sharing&ouid=118085605286254605923&rtpof=true&sd=true)
 
 ## Result
+
+- `agent.py` 使用此檔案進行遊戲輔助
+  - 每秒鐘將輸出前三信心的國家，並用不同顏色區別信心程度
+  - - `labels/continent.txt` 表示 label 名稱
