@@ -108,9 +108,6 @@
 - Confusion Matrix
   - x-axis: Prediction
   - y-axis: Ground Truth
-- Progress
-  - South America(7)
-    - VGG: 67% Validation Accuracy, 90% Top-3 Validation Accuracy
 
 ### Model Sample Code
 - Github: bentrevett/pytorch-image-classification
@@ -124,4 +121,14 @@
 
 ## Training Process
 
+- South America (7)
+  - VGG: 67% Validation Accuracy, 90% Top-3 Validation Accuracy
+  - Confusion Matrix
+  ![](https://i.ibb.co/9qJJ5t3/south-america-final-6.png)
+  - See More Training Details on [Google Sheet](https://docs.google.com/spreadsheets/d/1xkLweQziOTVoZh3IRLCucdoJTCRWPkm7/edit?usp=sharing&ouid=118085605286254605923&rtpof=true&sd=true)
+
 ## Result
+
+- `agent.py` 使用此檔案進行遊戲輔助
+  - 每秒鐘將輸出前三信心的國家，並用不同顏色區別信心程度
+  - - `labels/continent.txt` 表示 label 名稱
