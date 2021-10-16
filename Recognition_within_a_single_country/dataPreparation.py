@@ -13,14 +13,12 @@ imgCount = 30 # 設定需要找到多少張合法經緯度位置的圖片 (一�
 
 currentCount = 0 # 目前已找到多少張圖片
 
-targetCountry = "USWasDC" # 設定要尋找的目標國家
+targetCountry = "USArea4" # 設定要尋找的目標國家
 
 usage = 'val' # 可選擇 train 或是 val 代表目前圖片存於哪個資料夾中
 
-def downloadImg(usage='train'):
-    #USLosAngelas lat, lng = (random.random() * 0.34) + 33.82,  (random.random() * 0.64) - 118.44 # 隨機數產生經緯度(在目標國家範圍下)
-    #USKansas lat, lng = (random.random() * 0.34) + 38.91,  (random.random() * 0.45) - 94.79 # 隨機數產生經緯度(在目標國家範圍下)
-    lat, lng = (random.random() * 0.32) + 38.85,  (random.random() * 0.4) - 77.22 # 隨機數產生經緯度(在目標國家範圍下)
+def downloadImg(usage='val'):
+    lat, lng = (random.random() * 4.88) + 40.51,  (random.random() * 3.38) - 86.09 # 隨機數產生經緯度(在目標國家範圍下)
 
     location = str(lat) + ',' + str(lng)
     checkUrl = "https://maps.googleapis.com/maps/api/streetview/metadata?location=" + location + "&key=" + checkKey
