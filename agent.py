@@ -10,6 +10,10 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 colorama.init()
 
 model_path, label_path = 'models/europe/5.pth', 'lables/europe.txt'
+num_classes = 34
+test_count = 0
+history = [ 0.0 ] * num_classes
+labels = []
 yes = ['Y', 'y']
 
 class bcolors:
@@ -18,10 +22,12 @@ class bcolors:
     GOOD_BACK = '\033[43m'
     BAD_BACK = '\033[100m'
     NORMAL_BACK = '\033[47m'
+    SUMMARY_BACK = '\033[41m'
     PERFECT = '\033[92m'
     GREAT = '\033[94m'
     GOOD = '\033[93m'
     BAD = '\033[90m'
+    SUMMARY = '\033[91m'
     ENDC = '\033[0m'    
 
 def model_loading(num_classes, model_path):
@@ -42,17 +48,15 @@ def data_preprocessing(image):
     ])
     return torch.unsqueeze(preprocess(image), 0)
 
-def predicting(model, image, classes_path):
+def predicting(model, image):
     model.eval()
     image = image.to(device)
     out = model(image)
-    with open(classes_path) as f:
-        labels = [line.strip() for line in f.readlines()]
     
     percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
     _, index = torch.max(out, 1)
     _, indices = torch.sort(out, descending=True)
-    rank = 1
+
     if percentage[index[0]].item() > 90:
         print(f'{bcolors.PERFECT_BACK} PERFECT {bcolors.ENDC}', end =" ")
     elif percentage[index[0]].item() > 80:
@@ -75,7 +79,18 @@ def predicting(model, image, classes_path):
             print(f'{bcolors.BAD}{labels[idx]} ({round(percentage[idx].item(), 2)}) {bcolors.ENDC}', end =" ")
         else:
             print(f'{labels[idx]} ({round(percentage[idx].item(), 2)})', end =" ")
-        rank += 1
+        
+        history[idx.item()] += percentage[idx].item()    
+    print()
+
+def summary():
+    print()
+    print(f'{bcolors.SUMMARY_BACK} SUMMARY {bcolors.ENDC}', end =" ")
+    for _ in range(3):
+        index_max = max(range(len(history)), key=history.__getitem__)
+        print(f'{bcolors.SUMMARY}{labels[index_max]}{bcolors.ENDC}', end ="  ")
+        history[index_max] = 0.0
+    print("ranked by last 10 images")
     print()
 
 if __name__ == '__main__':
@@ -85,9 +100,17 @@ if __name__ == '__main__':
     if input("Check the image and press [Y/y] to start, others to quit: ") not in yes:
         exit(0)
 
+    with open(label_path) as f:
+        labels = [line.strip() for line in f.readlines()]
+
     while True:
         img = ImageGrab.grab(bbox=SCREEN)
         img = img.convert('RGB')
         image = data_preprocessing(img)
-        predicting(target_model, image, label_path)
+        predicting(target_model, image)
         time.sleep(1)
+        test_count += 1
+        if test_count == 10:
+            summary()
+            test_count = 0
+            history = [ 0.0 ] * num_classes
