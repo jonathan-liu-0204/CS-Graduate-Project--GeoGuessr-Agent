@@ -9,8 +9,8 @@ SCREEN = (500, 325, 1500, 775)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 colorama.init()
 
-model_path, label_path = 'models/europe/5.pth', 'lables/europe.txt'
-num_classes = 34
+model_path, label_path = 'models/europe/6.pth', 'lables/europe.txt' # Your Model / Label Location
+num_classes = 34                                                    # Number of Classes
 test_count = 0
 history = [ 0.0 ] * num_classes
 labels = []
@@ -30,7 +30,7 @@ class bcolors:
     SUMMARY = '\033[91m'
     ENDC = '\033[0m'    
 
-def model_loading(num_classes, model_path):
+def model_loading(model_path):
     # model = models.vgg11_bn(pretrained=False)
     # num_ftrs = model.classifier[6].in_features
     # model.classifier[6] = nn.Linear(num_ftrs, num_classes)
@@ -94,7 +94,7 @@ def summary():
     print()
 
 if __name__ == '__main__':
-    target_model = model_loading(34, model_path)
+    target_model = model_loading(model_path)
     img = ImageGrab.grab(bbox=SCREEN)
     img.show()
     if input("Check the image and press [Y/y] to start, others to quit: ") not in yes:
