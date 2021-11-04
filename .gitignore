@@ -13,5 +13,8 @@ figures/
 # 忽略 labels 名稱
 lables/
 
+# 忽略測試檔案
+temp/
+
 # 忽略 dataPreparation.csv
 dataPreparation.csv
