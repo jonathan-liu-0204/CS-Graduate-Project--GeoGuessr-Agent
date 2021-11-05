@@ -11,7 +11,7 @@ models/
 figures/
 
 # 忽略 labels 名稱
-lables/
+labels/
 
 # 忽略測試檔案
 temp/
