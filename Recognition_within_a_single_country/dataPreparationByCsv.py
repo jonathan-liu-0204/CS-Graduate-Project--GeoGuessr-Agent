@@ -7,6 +7,7 @@ import csv
 size, fov, heading, pitch = "600x300", "90", "0", "0" # 設定 Google Street View 當中的 URL 參數 (圖片呈現格式)
 
 imageKey, checkKey = "", "" # 將 Key 分兩支以確認 checkKey 不會消耗使用量
+GettingStateKey = ""
 
 username = "" # 設定"依經緯度傳換為國家"網站上的帳號名稱 (需註冊)
 
