@@ -52,16 +52,13 @@
     - Mostly full coverage (dark blue)
     - Partial converage (light blue)
     - Country size and population 
-  - List of qualified countries (72)
-    - Asia (18) `Japan` `South Korea` `Taiwan` `Singapore` `Malaysia` `Thailand` `Indonesia` `Philippines` `Israel` `Cambodia` `Sri Lanka` `Vietnam` `Mongolia` `Bhutan` `Bangladesh` `India` `Kyrgyzstan` `UAE`
+  - List of qualified countries (65)
+    - Asia (11) `Japan` `South Korea` `Singapore` `Malaysia` `Thailand` `Indonesia` `Philippines` `Israel` `Cambodia` `Sri Lanka` `Bangladesh`
     - Europe (34) `UK` `Ireland` `Spain` `Portugal` `Germany` `France` `Netherlands` `Denmark` `Belgium` `Italy` `Switzerland` `Luxembourg` `Poland` `Czechia` `Estonia` `Latvia` `Lithuania` `Austria` `Hungary` `Slovakia` `Slovenia` `Norway` `Sweden` `Finland` `Serbia` `Romania` `Bulgaria` `Croatia` `Greece` `Turkey` `Ukraine` `Albania` `Montenegro` `Russia`
-    - North America (3)  `USA` `Canada` `Mexico`
-    - South America (7) `Brazil` `Argentina` `Chile` `Uruguay` `Peru` `Ecuador` `Colombia`
-    - Africa (8) `South Africa` `Botswana` `Kenya` `Ghana` `Senegal` `Nigeria` `Lesotho` `Eswatini`
+    - North America (2)  `USA` `Canada` 
+    - South America (8) `Brazil` `Argentina` `Chile` `Uruguay` `Peru` `Ecuador` `Colombia` `Mexico`
+    - Africa (9) `South Africa` `Botswana` `Kenya` `Ghana` `Nigeria` `Lesotho` `Eswatini` `Bolivia`
     - Oceania (2) `Australia` `New Zealand`
-    - TBD (3) `Bolivia` `Iceland` `North Macedonia`
-  - Sub-Classifier in Europe
-  ![](https://i.ibb.co/vv4zJRH/Europe-Map.png)
 
 ### Convert to Country
 
@@ -120,15 +117,23 @@
   - ResNet
 
 ## Training Process
+- See More Training Details on [**Google Sheet**](https://docs.google.com/spreadsheets/d/1xkLweQziOTVoZh3IRLCucdoJTCRWPkm7/edit?usp=sharing&ouid=118085605286254605923&rtpof=true&sd=true)
 
-- South America (7)
-  - VGG: 67% Validation Accuracy, 90% Top-3 Validation Accuracy
+- South America (9)
+  - Model `VGG`
+  - Accuracy
+    - Validation Accuracy `64%`
+    - Top-3 Validation Accuracy `87%`
   - Confusion Matrix
-  ![](https://i.ibb.co/9qJJ5t3/south-america-final-6.png)
-  - See More Training Details on [Google Sheet](https://docs.google.com/spreadsheets/d/1xkLweQziOTVoZh3IRLCucdoJTCRWPkm7/edit?usp=sharing&ouid=118085605286254605923&rtpof=true&sd=true)
+- Europe (34)
+  - Model `VGG`
+  - Accuracy
+    - Validation Accuracy `48%`
+    - Top-3 Validation Accuracy `73%`
+  - Confusion Matrix
 
 ## Result
 
 - `agent.py` 使用此檔案進行遊戲輔助
   - 每秒鐘將輸出前三信心的國家，並用不同顏色區別信心程度
-  - - `labels/continent.txt` 表示 label 名稱
+  - `labels/continent.txt` 表示 label 名稱

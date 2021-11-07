@@ -9,8 +9,8 @@ SCREEN = (500, 325, 1500, 775)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 colorama.init()
 
-model_path, label_path = 'models/europe/6.pth', 'lables/europe.txt' # Your Model / Label Location
-num_classes = 34                                                    # Number of Classes
+model_path, label_path = 'models/test-world/2.pth', 'labels/world.txt'  # Your Model / Label Location
+num_classes = 65                                                        # Number of Classes
 test_count = 0
 history = [ 0.0 ] * num_classes
 labels = []
