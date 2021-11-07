@@ -10,8 +10,6 @@ imageKey = ""
 checkKey = "" # 將 Key 分兩支以確認 checkKey 不會消耗使用量
 StateKey = ""
 
-username = "" # 設定"依經緯度傳換為國家"網站上的帳號名稱 (需註冊)
-
 currentCount = 0 # 目前已找到多少張圖片
 
 imgCount, targetState, usage, latRange, latMin, lngRange, lngMin = [], [], [], [], [], [], []
