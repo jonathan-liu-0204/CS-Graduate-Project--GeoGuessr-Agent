@@ -5,9 +5,9 @@ from io import BytesIO
 
 size, fov, heading, pitch = "600x300", "90", "0", "0" # 設定 Google Street View 當中的 URL 參數 (圖片呈現格式)
 
-imageKey, checkKey = "", "" # 將 Key 分兩支以確認 checkKey 不會消耗使用量
+imageKey, checkKey = "AIzaSyDceAzogGYidDKJ6Mym7oAMmZp6-uBbFW4", "AIzaSyDKWjA37G9EGZXPadY2jcShNza0BDZTqvQ" # 將 Key 分兩支以確認 checkKey 不會消耗使用量
 
-username = "" # 設定"依經緯度傳換為國家"網站上的帳號名稱 (需註冊)
+username = "jonathanliu" # 設定"依經緯度傳換為國家"網站上的帳號名稱 (需註冊)
 
 imgCount = 30 # 設定需要找到多少張合法經緯度位置的圖片 (一次到位，關係到檔案名稱)
 
