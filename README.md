@@ -135,5 +135,7 @@
 ## Result
 
 - `agent.py` 使用此檔案進行遊戲輔助
-  - 每秒鐘將輸出前三信心的國家，並用不同顏色區別信心程度
+  - press `c` to predict the image
+  - press `r` to show the summary
+  - press `q` to quit
   - `labels/continent.txt` 表示 label 名稱
