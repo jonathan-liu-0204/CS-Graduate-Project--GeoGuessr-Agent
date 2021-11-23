@@ -27,10 +27,12 @@ def downloadImg(imgCount, targetState, usage, latRange, latMin, lngRange, lngMin
         StateURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + location + "&key=" + StateKey
         StateChecking = requests.get(StateURL)
         ReturnStateInfo = json.loads(StateChecking.text)
-        statecode = ReturnStateInfo["plus_code"]["compound_code"].split(",")
 
-        #print(targetState, " ---> ", statecode[1])
-        
+        try:
+            statecode = ReturnStateInfo["plus_code"]["compound_code"].split(", ")
+        except:
+            return False
+
         if(StateChecking.text.find('no country code found') != -1):
             return False # 此部分情況是合法的經緯度但並非我們的目標地區
         if(statecode[1] == targetState): # 若此合法經緯度位於我們設定的目標地區
@@ -40,9 +42,6 @@ def downloadImg(imgCount, targetState, usage, latRange, latMin, lngRange, lngMin
             print(f'Number: {currentCount+1}/{imgCount}\tLocation: {tuple((lat, lng))}\tState: {targetState}') # 印出其經緯度及對應的地區名稱 (供未來作為 ground truth)
             writeDetails("Location: " + str(tuple((lat, lng))) + "\tState: " + targetState + "\tUsage: " + usage + '\n', targetState) # 將地理位置存入 .txt
             return True # 此部分情況是合法的經緯度且位於我們的目標地區  
-        else:
-            print(statecode[1])
-            print("NO!! " + location + " NOT IN THE STATE!!!!")     
         return False # 此部分情況是合法的經緯度
     return False # 此部分情況是非法的經緯度
 
