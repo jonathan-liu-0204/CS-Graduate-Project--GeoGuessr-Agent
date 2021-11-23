@@ -32,15 +32,10 @@ def downloadImg(imgCount, targetCountry, usage, latRange, latMin, lngRange, lngM
             img = Image.open(BytesIO(viewRresponse.content)) # 轉成 img 供以後做處理
             img.save("./generated/images/" + usage + "/" + countryDetail["countryName"] + '/' + location + ".jpg") # 將圖片儲存在路徑 'generated/images/{country}/'
             print(f'Number: {currentCount+1}/{imgCount}\tLocation: {tuple((lat, lng))}\tCountry: {countryDetail["countryName"]}') # 印出其經緯度及對應的國家名稱 (供未來作為 ground truth)
-            writeDetails("Location: " + str(tuple((lat, lng))) + "\tCountry: " + targetCountry + "\tUsage: " + usage + '\n', targetCountry) # 將地理位置存入 .txt
             return True # 此部分情況是合法的經緯度且位於我們的目標國家
         return False # 此部分情況是合法的經緯度但並非我們的目標國家
     return False # 此部分情況是非法的經緯度
 
-def writeDetails(string, targetCountry):
-    path = 'generated/details/' + targetCountry + '.txt'
-    with open(path, 'a') as file:
-        file.write(string)
 
 def readFromCsv():
     with open('dataPreparation.csv', newline='') as csvfile:
@@ -62,7 +57,6 @@ if __name__ == '__main__':
     if not os.path.exists('generated/'):
         os.mkdir('generated/') # 產生 generated 及 images 資料夾
         os.mkdir('generated/images/')
-        os.mkdir('generated/details/')
         os.mkdir('generated/images/train/')
         os.mkdir('generated/images/val/')
     
@@ -72,6 +66,13 @@ if __name__ == '__main__':
         if not os.path.exists('generated/images/val/'+targetCountry[i]+'/'): # 檢查val資料夾是否存在
             os.mkdir('generated/images/val/'+targetCountry[i]+'/')
 
+        if username == "lawrence0215":
+            username = "tempsecondary"
+            print("Now Username: ", username)
+        elif username == "tempsecondary":
+            username = "lawrence0215"
+            print("Now Username: ", username)
+
         currentCount = 0
         start = time.time()
         while True:
@@ -80,3 +81,4 @@ if __name__ == '__main__':
         end = time.time()
 
         print(f'Download {imgCount[i]} image(s) in {round(end-start, 3)} sec(s)')
+  

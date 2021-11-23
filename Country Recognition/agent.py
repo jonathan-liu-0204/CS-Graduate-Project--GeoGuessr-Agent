@@ -4,15 +4,17 @@ import colorama
 from torchvision import transforms
 import torch
 import time
+import keyboard
 
 SCREEN = (500, 325, 1500, 775)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 colorama.init()
 
-model_path, label_path = 'models/test-world/2.pth', 'labels/world.txt'  # Your Model / Label Location
+model_path, label_path = 'models/test-world/9.pth', 'labels/world.txt'  # Your Model / Label Location
 num_classes = 65                                                        # Number of Classes
 test_count = 0
 history = [ 0.0 ] * num_classes
+best = [ 0.0, "CountryName"]
 labels = []
 yes = ['Y', 'y']
 
@@ -57,6 +59,10 @@ def predicting(model, image):
     _, index = torch.max(out, 1)
     _, indices = torch.sort(out, descending=True)
 
+    if percentage[index[0]].item() > best[0]:
+        best[0] = percentage[index[0]].item()
+        best[1] = labels[index[0]]
+
     if percentage[index[0]].item() > 90:
         print(f'{bcolors.PERFECT_BACK} PERFECT {bcolors.ENDC}', end =" ")
     elif percentage[index[0]].item() > 80:
@@ -90,8 +96,11 @@ def summary():
         index_max = max(range(len(history)), key=history.__getitem__)
         print(f'{bcolors.SUMMARY}{labels[index_max]}{bcolors.ENDC}', end ="  ")
         history[index_max] = 0.0
-    print("ranked by last 10 images")
+    print(f'ranked since checkpoint with single best result {round(best[0], 2)}% in {best[1]}')
     print()
+
+def initialize():
+    return 0, [ 0.0 ] * num_classes, [ 0.0, "CountryName"]
 
 if __name__ == '__main__':
     target_model = model_loading(model_path)
@@ -104,13 +113,16 @@ if __name__ == '__main__':
         labels = [line.strip() for line in f.readlines()]
 
     while True:
-        img = ImageGrab.grab(bbox=SCREEN)
-        img = img.convert('RGB')
-        image = data_preprocessing(img)
-        predicting(target_model, image)
-        time.sleep(1)
-        test_count += 1
-        if test_count == 10:
-            summary()
-            test_count = 0
-            history = [ 0.0 ] * num_classes
+        if keyboard.is_pressed('c'):
+            img = ImageGrab.grab(bbox=SCREEN)
+            img = img.convert('RGB')
+            image = data_preprocessing(img)
+            predicting(target_model, image)
+            time.sleep(1)
+            test_count += 1
+        elif keyboard.is_pressed('r'):
+            summary()         
+            test_count, history, best = initialize()
+            time.sleep(1)
+        elif keyboard.is_pressed('q'):
+            break
