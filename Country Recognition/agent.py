@@ -10,8 +10,8 @@ SCREEN = (500, 325, 1500, 775)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 colorama.init()
 
-model_path, label_path = 'models/test-world/9.pth', 'labels/world.txt'  # Your Model / Label Location
-num_classes = 65                                                        # Number of Classes
+model_path, label_path = 'models/test-world/91.pth', 'labels/world.txt'  # Your Model / Label Location
+num_classes = 65                                                         # Number of Classes
 test_count = 0
 history = [ 0.0 ] * num_classes
 best = [ 0.0, "CountryName"]
@@ -113,7 +113,7 @@ if __name__ == '__main__':
         labels = [line.strip() for line in f.readlines()]
 
     while True:
-        if keyboard.is_pressed('c'):
+        if keyboard.is_pressed('d'):
             img = ImageGrab.grab(bbox=SCREEN)
             img = img.convert('RGB')
             image = data_preprocessing(img)
