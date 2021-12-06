@@ -16,11 +16,11 @@ import copy
 ############## TENSORBOARD ##############
 from torch.utils.tensorboard import SummaryWriter
 
-exp_name = "test-world/2/1"         # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
-data_dir = "generated/images"       # 設定圖片資料夾位置
-model_name = "vgg"                  # 選擇 Models (非正式名稱)
-num_classes = 66                    # 設定共有多少類別 (手動)
-batch_size = 32                     # 取決於擁有多少記憶體
+exp_name = "test-world/9/2"         # 設定實驗名稱 (可簡單用代碼，詳細可見 comparison.xlsx) ex.實驗組別/實驗編號
+data_dir = "generated/saved"        # 設定圖片資料夾位置
+model_name = "densenet201"          # 選擇 Models (非正式名稱)
+num_classes = 65                    # 設定共有多少類別 (手動)
+batch_size = 16                     # 取決於擁有多少記憶體
 max_epochs = 40                     # 設定訓練過程最大 Epochs 上限
 target_acc = 0.8                    # 設定目標正確率
 feature_extract = False             # 這裡固定為 False (表示去訓練整個 Model)
@@ -157,6 +157,19 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Fa
         model_ft.classifier = nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
+    elif model_name == 'resnet101':
+        model_ft = models.resnet101(pretrained=use_pretrained)
+        num_ftrs = model_ft.fc.in_features
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
+        input_size = 224
+
+    elif model_name == 'densenet201':
+        model_ft = models.densenet201(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_extract)
+        num_ftrs = model_ft.classifier.in_features
+        model_ft.classifier = nn.Linear(num_ftrs, num_classes)
+        input_size = 224
+
     else:
         print("Invalid Model Name......")
         exit()
@@ -177,6 +190,8 @@ print(model_ft)
 data_transforms = {
     # Notice, the models were pretrained with the hard-coded normalization values
     'train': transforms.Compose([
+        # transforms.Resize(input_size),
+        # transforms.RandomCrop(input_size),
         transforms.RandomResizedCrop(input_size),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
@@ -225,12 +240,12 @@ img = Image.open('figures/' + fig_name + '.png')
 img.show()
 
 ########### Saving The Model ###########
-save_path = 'models/test-world/1.pth'
+save_path = 'models/test-world/92.pth'
 torch.save(model_ft, save_path)
 
 ######### Saving Confusion Matrix #########
 mat = np.matrix(confusion_matrix)
 
-with open('confusion.txt', 'wb') as f:
+with open('temp/'+fig_name+'-confusion.txt', 'wb') as f:
     for line in mat:
         np.savetxt(f, line, fmt='%.2f')
