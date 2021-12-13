@@ -40,7 +40,7 @@
 
 ## Training Process and More Details
 - You can see our report [here]().
-- Our experiemts result including accuracy [here]().
-- The real test result [here]().
+- Our experiemts result including accuracy [here](https://docs.google.com/spreadsheets/d/1xkLweQziOTVoZh3IRLCucdoJTCRWPkm7/edit#gid=137172435).
+- The real test result [here](https://docs.google.com/spreadsheets/d/1BSw9XqoiUzrIwHlmMrB24LggP-HaTZbH/edit?usp=sharing&ouid=118085605286254605923&rtpof=true&sd=true).
 
 :warning: **Only use our agent on single user mode, cause it may not be a good idea to use it when competing with other players (battle royale), it's kind of cheating!!**
