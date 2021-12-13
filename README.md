@@ -36,7 +36,7 @@
 - Wait for couple of seconds, it will automatically screenshot your screen. Enter `y` in terminal if there's no problem.
 - Pressing `e` so the agent will do a screenshot on your screen, and automatically predict the country based on the image.
 - After several screenshots you have done in a single round, press `t` so that the agent will do a summary for you, and you can click the predicted answer that told by our agent.
-- [Here]() is a demo video if you are interested.
+- [Here](https://youtu.be/H6NdE8DcTU4) is a demo video if you are interested.
 
 ## Training Process and More Details
 - You can see our report [here]().
