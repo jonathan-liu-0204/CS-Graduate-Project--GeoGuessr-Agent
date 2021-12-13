@@ -1,0 +1,3 @@
+imgCount,targetCountry,usage,latRange,latMin,lngRange,lngMin
+20,Austria,train,3,46,7,10
+10,Austria,val,3,46,7,10
