@@ -39,7 +39,7 @@
 - [Here](https://youtu.be/H6NdE8DcTU4) is a demo video if you are interested.
 
 ## Training Process and More Details
-- You can see our report [here](https://drive.google.com/drive/u/2/folders/0APDGZcn8bVNxUk9PVA).
+- You can see our report [here](https://github.com/jonathan-liu-0204/CS-Graduate-Project--GeoGuessr-Agent/blob/main/report.pdf).
 - Our experiemts result including accuracy [here](https://docs.google.com/spreadsheets/d/1xkLweQziOTVoZh3IRLCucdoJTCRWPkm7/edit#gid=137172435).
 - The real test result [here](https://docs.google.com/spreadsheets/d/1BSw9XqoiUzrIwHlmMrB24LggP-HaTZbH/edit?usp=sharing&ouid=118085605286254605923&rtpof=true&sd=true).
 
